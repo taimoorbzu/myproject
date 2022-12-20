@@ -1,0 +1,25 @@
+services:
+    apache-server:
+        build: .
+        container_name: php-apache
+        ports:
+            - 80:80
+        volumes:
+            - ./crud:/var/www/html/
+        depends_on:
+            - mariadb-server
+
+    mariadb-server:
+        image: mariadb
+        restart: always
+        container_name: mysql-db
+        ports:
+          - 3306:3306
+        volumes:
+            - crud-data:/var/lib/mysql
+            - ./crud/sql:/docker-entrypoint-initdb.d/
+        environment:
+            MARIADB_DATABASE: crud
+            MARIADB_ROOT_PASSWORD: admin
+volumes:
+  crud-data:
